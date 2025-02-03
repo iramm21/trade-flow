@@ -12,3 +12,9 @@ declare module "next-auth" {
     id: string;
   }
 }
+
+export interface Business {
+  id: string;
+  name: string;
+  ownerId: string;
+}
