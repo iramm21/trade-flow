@@ -18,49 +18,70 @@ export default function TradeCalculator() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-4">Trade Calculator</h1>
-      <div className="space-y-4 max-w-md">
-        <input
-          type="number"
-          placeholder="Material Cost"
-          value={materialCost}
-          onChange={(e) => setMaterialCost(Number(e.target.value))}
-          className="border p-2 rounded w-full"
-        />
-        <input
-          type="number"
-          placeholder="Labor Cost"
-          value={laborCost}
-          onChange={(e) => setLaborCost(Number(e.target.value))}
-          className="border p-2 rounded w-full"
-        />
-        <input
-          type="number"
-          placeholder="Overhead"
-          value={overhead}
-          onChange={(e) => setOverhead(Number(e.target.value))}
-          className="border p-2 rounded w-full"
-        />
-        <input
-          type="number"
-          placeholder="Selling Price"
-          value={price}
-          onChange={(e) => setPrice(Number(e.target.value))}
-          className="border p-2 rounded w-full"
-        />
-        <button
-          onClick={handleCalculate}
-          className="px-4 py-2 bg-green-600 text-white rounded"
-        >
-          Calculate
-        </button>
-        {estimate !== null && (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold mb-6 text-center">
+          Trade Calculator
+        </h1>
+        <div className="space-y-4">
           <div>
-            <p>Estimated Cost: ${estimate.toFixed(2)}</p>
-            <p>Margin: {margin?.toFixed(2)}%</p>
+            <label className="block text-gray-700 mb-1">Material Cost</label>
+            <input
+              type="number"
+              placeholder="Enter material cost"
+              value={materialCost}
+              onChange={(e) => setMaterialCost(Number(e.target.value))}
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
           </div>
-        )}
+          <div>
+            <label className="block text-gray-700 mb-1">Labor Cost</label>
+            <input
+              type="number"
+              placeholder="Enter labor cost"
+              value={laborCost}
+              onChange={(e) => setLaborCost(Number(e.target.value))}
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-1">Overhead</label>
+            <input
+              type="number"
+              placeholder="Enter overhead"
+              value={overhead}
+              onChange={(e) => setOverhead(Number(e.target.value))}
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700 mb-1">Selling Price</label>
+            <input
+              type="number"
+              placeholder="Enter selling price"
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+              className="w-full border rounded p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <button
+            onClick={handleCalculate}
+            className="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+          >
+            Calculate
+          </button>
+          {estimate !== null && (
+            <div className="mt-6 border-t pt-4">
+              <p className="text-lg font-medium text-gray-800">
+                Estimated Cost:{" "}
+                <span className="font-bold">${estimate.toFixed(2)}</span>
+              </p>
+              <p className="text-lg font-medium text-gray-800">
+                Margin: <span className="font-bold">{margin?.toFixed(2)}%</span>
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

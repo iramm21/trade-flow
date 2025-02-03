@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import Link from "next/link";
-import type { Business } from "@/types/next-auth"; // Ensure this type is defined appropriately
+import type { Business } from "@/types/next-auth";
 
 // A simple fetcher function that returns JSON data
 const fetcher = (url: string): Promise<Business[]> =>
@@ -18,30 +18,54 @@ export default function Dashboard() {
     fetcher
   );
 
-  if (status === "loading") return <p>Loading...</p>;
-  if (!session) return <p>You must be logged in to view the dashboard.</p>;
-  if (error) return <p>Error loading businesses: {error.message}</p>;
+  if (status === "loading") return <p className="p-8">Loading...</p>;
+  if (!session)
+    return <p className="p-8">You must be logged in to view the dashboard.</p>;
+  if (error)
+    return <p className="p-8">Error loading businesses: {error.message}</p>;
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-      <h2 className="text-xl mb-2">Your Businesses</h2>
+    <div className="max-w-7xl mx-auto p-8">
+      {/* Dashboard Header */}
+      <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <Link
+          href="/business/register"
+          className="mt-4 md:mt-0 px-5 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+        >
+          Create Business
+        </Link>
+      </div>
+
+      {/* Business List */}
+      <h2 className="text-xl font-semibold mb-4">Your Businesses</h2>
       {businesses && businesses.length > 0 ? (
-        <ul className="space-y-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {businesses.map((business: Business) => (
-            <li key={business.id} className="p-4 border rounded">
-              <h3 className="text-lg font-semibold">{business.name}</h3>
+            <div
+              key={business.id}
+              className="p-4 border rounded hover:shadow-lg transition-shadow"
+            >
+              <h3 className="text-lg font-semibold mb-2">{business.name}</h3>
               <Link
-                href={`/business/${business.id}/projects`}
-                className="text-blue-500"
+                href={`/business/${business.id}/project/`}
+                className="text-blue-500 hover:underline"
               >
-                View Projects
+                View Projects &rarr;
               </Link>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       ) : (
-        <p>No businesses found. Consider creating one.</p>
+        <div className="text-center py-12">
+          <p className="mb-4 text-gray-700">No businesses found.</p>
+          <Link
+            href="/business/register"
+            className="px-6 py-3 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+          >
+            Create your first business
+          </Link>
+        </div>
       )}
     </div>
   );
