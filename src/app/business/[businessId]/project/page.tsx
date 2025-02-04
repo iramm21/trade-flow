@@ -14,32 +14,55 @@ interface Project {
   updatedAt: string;
 }
 
-// A fetcher function to retrieve projects from the API
-const fetcher = (url: string): Promise<Project[]> =>
+// Define a type for business details
+interface BusinessInfo {
+  id: string;
+  name: string;
+}
+
+// Fetcher for projects (returns an array of projects)
+const fetchProjects = (url: string): Promise<Project[]> =>
+  fetch(url).then((res) => res.json());
+
+// Fetcher for business details (returns one business object)
+const fetchBusiness = (url: string): Promise<BusinessInfo> =>
   fetch(url).then((res) => res.json());
 
 export default function BusinessProjectsPage() {
   // Extract businessId from the route parameters
   const { businessId } = useParams();
 
-  // Fetch the projects only if businessId is available
-  const { data: projects, error } = useSWR(
-    businessId ? `/api/business/${businessId}/projects` : null,
-    fetcher
+  // Fetch the business details
+  const { data: business, error: businessError } = useSWR<BusinessInfo>(
+    businessId ? `/api/business/${businessId}` : null,
+    fetchBusiness
   );
 
-  if (!projects && !error) return <p className="p-8">Loading projects...</p>;
-  if (error)
+  // Fetch the projects for the given business
+  const { data: projects, error: projectsError } = useSWR<Project[]>(
+    businessId ? `/api/business/${businessId}/projects` : null,
+    fetchProjects
+  );
+
+  if ((!business && !businessError) || (!projects && !projectsError))
+    return <p className="p-8">Loading...</p>;
+  if (businessError)
     return (
       <p className="p-8">
-        Error loading projects: {error.message || "Unknown error"}
+        Error loading business: {businessError.message || "Unknown error"}
+      </p>
+    );
+  if (projectsError)
+    return (
+      <p className="p-8">
+        Error loading projects: {projectsError.message || "Unknown error"}
       </p>
     );
 
   return (
     <div className="max-w-4xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-4">
-        Projects for Business: {businessId}
+        Projects for Business: {business ? business.name : businessId}
       </h1>
       {projects && projects.length > 0 ? (
         <ul className="space-y-6">
